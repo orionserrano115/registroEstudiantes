@@ -17,8 +17,12 @@ def conectar_db():
 
 @app.route('/')
 def index():
+    return "FUNCIONA MI APP"
+'''
+@app.route('/')
+def index():
     return render_template('index.html')
-
+'''
 
 @app.route('/estudiantes', methods=['GET'])
 def obtener_estudiantes():
