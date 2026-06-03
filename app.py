@@ -5,11 +5,11 @@ from mysql.connector import Error
 app = Flask(__name__)
 
 DB_CONFIG = {
-    "host": "localhost",
-    "port": 3306,
-    "user": "root",
-    "password": "",
-    "database": "registro_estudiantes"
+    "host": "mysql-trainee115.alwaysdata.net",
+    #"port": 3306,
+    "user": "trainee115",
+    "password": "clase1234",
+    "database": "trainee115_registroestudiantes"
 }
 
 def conectar_db():
