@@ -1,0 +1,15 @@
+CREATE DATABASE registro_estudiantes;
+
+USE registro_estudiantes;
+
+CREATE TABLE estudiantes(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    cedula VARCHAR(50) UNIQUE NOT NULL,
+    edad INT NOT NULL,
+    curso VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Estudiantes</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        form{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        input{
+            padding:10px;
+            min-width:150px;
+            flex:1;
+        }
+
+        button{
+            padding:10px 15px;
+            cursor:pointer;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        th,
+        td{
+            border:1px solid #ccc;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#f5f5f5;
+        }
+
+        .btn-eliminar{
+            background:#dc3545;
+            color:white;
+            border:none;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Registro de Estudiantes</h1>
+
+    <form id="formulario">
+
+        <input type="hidden" id="id">
+
+        <input
+            type="text"
+            id="nombre"
+            placeholder="Nombre"
+            required
+        >
+
+        <input
+            type="text"
+            id="apellido"
+            placeholder="Apellido"
+            required
+        >
+
+        <input
+            type="text"
+            id="cedula"
+            placeholder="Cédula"
+            required
+        >
+
+        <input
+            type="number"
+            id="edad"
+            placeholder="Edad"
+            required
+        >
+
+        <input
+            type="text"
+            id="curso"
+            placeholder="Curso"
+            required
+        >
+
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cédula</th>
+                <th>Edad</th>
+                <th>Curso</th>
+                <th>Fecha de Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody id="tablaEstudiantes"></tbody>
+
+    </table>
+
+<script>
+
+let modoEdicion = false;
+let estudianteId = null;
+
+window.onload = function(){
+
+    cargarEstudiantes();
+
+    document
+        .getElementById("formulario")
+        .addEventListener("submit", async function(e){
+
+            e.preventDefault();
+
+            await agregarEstudiante();
+
+        });
+
+};
+
+async function cargarEstudiantes(){
+
+    const respuesta = await fetch('/estudiantes');
+    const estudiantes = await respuesta.json();
+
+    let tbody =
+        document.getElementById("tablaEstudiantes");
+
+    tbody.innerHTML = "";
+
+    estudiantes.forEach(estudiante => {
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${estudiante.id}</td>
+            <td>${estudiante.nombre}</td>
+            <td>${estudiante.apellido}</td>
+            <td>${estudiante.cedula}</td>
+            <td>${estudiante.edad}</td>
+            <td>${estudiante.curso}</td>
+            <td>${estudiante.created_at}</td>
+            <td>
+
+                <button
+                    onclick="editarEstudiante(
+                        ${estudiante.id},
+                        '${estudiante.nombre}',
+                        '${estudiante.apellido}',
+                        '${estudiante.cedula}',
+                        '${estudiante.edad}',
+                        '${estudiante.curso}'
+                    )">
+                    Editar
+                </button>
+
+                <button
+                    class="btn-eliminar"
+                    onclick="eliminarEstudiante(${estudiante.id})">
+                    Eliminar
+                </button>
+
+            </td>
+        </tr>
+        `;
+
+    });
+
+}
+
+async function agregarEstudiante(){
+
+    let nombre = document.getElementById("nombre").value;
+    let apellido = document.getElementById("apellido").value;
+    let cedula = document.getElementById("cedula").value;
+    let edad = document.getElementById("edad").value;
+    let curso = document.getElementById("curso").value;
+
+    if(
+        nombre=="" ||
+        apellido=="" ||
+        cedula=="" ||
+        edad=="" ||
+        curso==""
+    ){
+        alert("Complete todos los campos");
+        return;
+    }
+
+    const datos = {
+        nombre,
+        apellido,
+        cedula,
+        edad,
+        curso
+    };
+
+    let url = "/estudiantes";
+    let metodo = "POST";
+
+    if(modoEdicion){
+        url = `/estudiantes/${estudianteId}`;
+        metodo = "PUT";
+    }
+
+    const respuesta = await fetch(
+        url,
+        {
+            method: metodo,
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(datos)
+        }
+    );
+
+    const resultado = await respuesta.json();
+
+    if(resultado.error){
+        alert(resultado.error);
+        return;
+    }
+
+    limpiarFormulario();
+
+    modoEdicion = false;
+    estudianteId = null;
+
+    document.querySelector("button[type='submit']")
+        .textContent = "Guardar";
+
+    await cargarEstudiantes();
+
+    alert(resultado.mensaje);
+
+}
+
+async function eliminarEstudiante(id){
+
+    if(!confirm("¿Desea eliminar este estudiante?")){
+        return;
+    }
+
+    await fetch(`/estudiantes/${id}`, {
+        method: "DELETE"
+    });
+
+    await cargarEstudiantes();
+
+}
+
+function editarEstudiante(
+    id,
+    nombre,
+    apellido,
+    cedula,
+    edad,
+    curso
+){
+
+    document.getElementById("nombre").value = nombre;
+    document.getElementById("apellido").value = apellido;
+    document.getElementById("cedula").value = cedula;
+    document.getElementById("edad").value = edad;
+    document.getElementById("curso").value = curso;
+
+    estudianteId = id;
+    modoEdicion = true;
+
+    document.querySelector("button[type='submit']")
+        .textContent = "Actualizar";
+
+}
+
+function limpiarFormulario(){
+
+    document.getElementById("nombre").value="";
+    document.getElementById("apellido").value="";
+    document.getElementById("cedula").value="";
+    document.getElementById("edad").value="";
+    document.getElementById("curso").value="";
+
+}
+
+</script>
+
+</body>
+</html>
