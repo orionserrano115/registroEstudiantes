@@ -14,11 +14,6 @@ DB_CONFIG = {
 
 def conectar_db():
     return mysql.connector.connect(**DB_CONFIG)
-'''
-@app.route('/')
-def index():
-    return "FUNCIONA MI APP"
-    '''
 
 @app.route('/')
 def index():
