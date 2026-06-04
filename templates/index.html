@@ -280,9 +280,9 @@ async function eliminarEstudiante(id){
         return;
     }
 
-    await fetch(`./estudiantes/${id}`), {
+    await fetch(`./estudiantes/${id}`, {
         method: "DELETE"
-    };
+    });
 
     await cargarEstudiantes();
 
@@ -322,6 +322,8 @@ function limpiarFormulario(){
 }
 
 </script>
-
+<script>
+console.log("VERSION NUEVA 12345");
+</script>
 </body>
 </html>
