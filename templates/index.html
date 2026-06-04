@@ -160,7 +160,7 @@ window.onload = function(){
 
 async function cargarEstudiantes(){
 
-    const respuesta = await fetch('/estudiantes');
+    const respuesta = await fetch('estudiantes');
     const estudiantes = await respuesta.json();
 
     let tbody =
