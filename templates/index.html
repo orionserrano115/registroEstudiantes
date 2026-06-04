@@ -160,7 +160,7 @@ window.onload = function(){
 
 async function cargarEstudiantes(){
 
-    const respuesta = await fetch('estudiantes');
+    const respuesta = await fetch('/cliente3/estudiantes');
     const estudiantes = await respuesta.json();
 
     let tbody =
@@ -234,11 +234,11 @@ async function agregarEstudiante(){
         curso
     };
 
-    let url = "./estudiantes";
+    let url = "/cliente3/estudiantes";
     let metodo = "POST";
 
     if(modoEdicion){
-        url = `./estudiantes/${estudianteId}`;
+        url = `/cliente3/estudiantes/${estudianteId}`;
         metodo = "PUT";
     }
 
@@ -280,7 +280,7 @@ async function eliminarEstudiante(id){
         return;
     }
 
-    await fetch(`./estudiantes/${id}`, {
+    await fetch(`/cliente3/estudiantes/${id}`, {
         method: "DELETE"
     });
 
