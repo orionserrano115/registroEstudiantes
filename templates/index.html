@@ -234,11 +234,11 @@ async function agregarEstudiante(){
         curso
     };
 
-    let url = "/estudiantes";
+    let url = "./estudiantes";
     let metodo = "POST";
 
     if(modoEdicion){
-        url = `/estudiantes/${estudianteId}`;
+        url = `./estudiantes/${estudianteId}`;
         metodo = "PUT";
     }
 
