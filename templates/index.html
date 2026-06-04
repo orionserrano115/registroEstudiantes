@@ -15,23 +15,20 @@
 }
 
 body {
+    body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
 
-    /* Fondo tipo universidad */
-    background:
-    /*linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),*/
-    url('img/university.jpg');
-    
+    background: url('img/university.jpg') no-repeat center center fixed;
     background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
 
+    color: #fff;
+}
+.container {
     max-width: 1200px;
     margin: 30px auto;
     padding: 20px;
-
-    color: #fff;
+}
 }
 
 h1 {
@@ -159,7 +156,7 @@ th {
 
 </head>
 <body>
-
+<div class="container">
     <h1>Registro de Estudiantes</h1>
 
     <form id="formulario">
@@ -414,5 +411,6 @@ function limpiarFormulario(){
 <script>
 console.log("VERSION NUEVA 12345");
 </script>
+</div>
 </body>
 </html>
