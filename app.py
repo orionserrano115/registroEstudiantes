@@ -71,41 +71,44 @@ def obtener_estudiante(id):
         return jsonify({
             "error": str(e)
         }), 400
+    
+def validar_estudiante(datos):
+
+    if not datos:
+        return "No se recibieron datos"
+
+    if not datos.get('nombre', '').strip():
+        return "El nombre es obligatorio"
+
+    if not datos.get('apellido', '').strip():
+        return "El apellido es obligatorio"
+
+    try:
+        edad = int(datos['edad'])
+    except:
+        return "La edad debe ser numérica"
+
+    if edad <= 0:
+        return "La edad debe ser mayor que cero"
+
+    if edad > 120:
+        return "La edad no es válida"
+
+    return None
 
 @app.route('/estudiantes', methods=['POST'])
 def agregar_estudiante():
 
     try:
-
         datos = request.json
 
-        if not datos:
+        error = validar_estudiante(datos)
+
+        if error:
             return jsonify({
-                "error": "No se recibieron datos"
-           }), 400
+                "error": error
+            }), 400
 
-        if not datos.get('nombre', '').strip():
-           return jsonify({
-               "error": "El nombre es obligatorio"
-           }), 400
-
-        if not datos.get('apellido', '').strip():
-           return jsonify({
-               "error": "El apellido es obligatorio"
-           }), 400
-
-
-        edad = int(datos['edad'])
-
-        if edad <= 0:
-           return jsonify({
-               "error": "La edad debe ser mayor que cero"
-           }), 400
-
-        if edad > 120:
-           return jsonify({
-               "error": "La edad no es válida"
-           }), 400
 
         print("DATOS RECIBIDOS:", datos)
 
@@ -156,34 +159,13 @@ def agregar_estudiante():
 def actualizar_estudiante(id):
 
     try:
-
         datos = request.json
 
-        if not datos:
-            return jsonify({
-                "error": "No se recibieron datos"
-            }), 400
+        error = validar_estudiante(datos)
 
-        if not datos.get('nombre', '').strip():
+        if error:
             return jsonify({
-                "error": "El nombre es obligatorio"
-            }), 400
-
-        if not datos.get('apellido', '').strip():
-            return jsonify({
-                "error": "El apellido es obligatorio"
-            }), 400
-
-        edad = int(datos['edad'])
-
-        if edad <= 0:
-            return jsonify({
-                "error": "La edad debe ser mayor que cero"
-            }), 400
-
-        if edad > 120:
-            return jsonify({
-                "error": "La edad no es válida"
+                "error": error
             }), 400
 
         conn = conectar_db()
