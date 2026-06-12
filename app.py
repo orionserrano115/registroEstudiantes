@@ -24,23 +24,47 @@ def conectar_db():
 def index():
     return render_template('index.html')
 
-
 @app.route('/estudiantes', methods=['GET'])
 def obtener_estudiantes():
+
+    conn = conectar_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM estudiantes ORDER BY id DESC"
+    )
+
+    estudiantes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(estudiantes)
+
+@app.route('/estudiantes/<int:id>', methods=['GET'])
+def obtener_estudiante(id):
 
     try:
 
         conn = conectar_db()
         cursor = conn.cursor(dictionary=True)
 
-        cursor.execute("SELECT * FROM estudiantes ORDER BY id DESC")
+        cursor.execute(
+            "SELECT * FROM estudiantes WHERE id=%s",
+            (id,)
+        )
 
-        estudiantes = cursor.fetchall()
+        estudiante = cursor.fetchone()
 
         cursor.close()
         conn.close()
 
-        return jsonify(estudiantes)
+        if not estudiante:
+            return jsonify({
+                "error": "Estudiante no encontrado"
+            }), 404
+
+        return jsonify(estudiante)
 
     except Error as e:
 
