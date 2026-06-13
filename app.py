@@ -115,29 +115,44 @@ def agregar_estudiante():
         conn = conectar_db()
         cursor = conn.cursor()
 
-        sql = """
-        INSERT INTO estudiantes
-        (nombre, apellido, cedula, edad, curso)
-        VALUES (%s,%s,%s,%s,%s)
-        """
-
-        valores = (
-            datos['nombre'],
-            datos['apellido'],
-            datos['cedula'],
-            datos['edad'],
-            datos['curso']
+        cursor.execute(
+            "SELECT id FROM estudiantes WHERE cedula = %s",
+            (datos['cedula'],)
         )
 
-        cursor.execute(sql, valores)
+        estudiante = cursor.fetchone()
 
-        if cursor.rowcount == 0:
+        if estudiante:
             cursor.close()
             conn.close()
 
             return jsonify({
-                "error": "Estudiante no encontrado"
-            }), 404
+                "error": "La cédula ya está registrada"
+            }), 400
+            
+        sql = """
+            INSERT INTO estudiantes
+            (nombre, apellido, cedula, edad, curso)
+            VALUES (%s,%s,%s,%s,%s)
+            """
+
+        valores = (
+                datos['nombre'],
+                datos['apellido'],
+                datos['cedula'],
+                datos['edad'],
+                datos['curso']
+            )
+
+        cursor.execute(sql, valores)
+
+        if cursor.rowcount == 0:
+                cursor.close()
+                conn.close()
+
+                return jsonify({
+                    "error": "Estudiante no encontrado"
+                }), 404
 
         conn.commit()
 
@@ -145,8 +160,8 @@ def agregar_estudiante():
         conn.close()
 
         return jsonify({
-            "mensaje":"Estudiante agregado correctamente"
-        })
+                "mensaje":"Estudiante agregado correctamente"
+            })
 
     except Error as e:
 
