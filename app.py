@@ -160,7 +160,7 @@ def agregar_estudiante():
         conn.close()
 
         return jsonify({
-                "mensaje":"Estudiante agregado correctamente"
+                "mensaje":"Estudiante agregado correctamente v2"
             })
 
     except Error as e:
