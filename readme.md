@@ -164,38 +164,70 @@ push a main → GitHub Actions → FTP Deploy → AlwaysData
 
 ## 🔮 Mejoras futuras
 
-### 🔴 Seguridad (prioritario)
+### 🔴 Crítico — Seguridad
 
-- [ ] Mover credenciales FTP del workflow a GitHub Secrets
-- [ ] Corregir vulnerabilidad XSS: sanitizar datos antes de insertarlos con `innerHTML`
-- [ ] Agregar `.env` al `.gitignore` para evitar subir credenciales accidentalmente
+- [ ] Mover credenciales FTP a GitHub Secrets (`${{ secrets.FTP_PASSWORD }}`)
+- [ ] Corregir XSS en el frontend (evitar `innerHTML`; usar `textContent` o sanitización)
+- [ ] Eliminar `print()` de debug que exponen datos de usuarios
+- [ ] Agregar `.env` al `.gitignore`
+- [ ] Implementar autenticación con JWT (endpoint `/login`, tokens con expiración, protección de rutas con `@jwt_required()`, hash de contraseñas con Werkzeug o bcrypt)
+- [ ] Variables sensibles en `.env` (`SECRET_KEY`, `JWT_SECRET_KEY`)
 
-### 🟠 Funcionalidad
+### 🟠 Bugs funcionales
 
-- [ ] Agregar sistema de autenticación con roles (Admin, Docente, Estudiante)
-- [ ] Agregar botón "Cancelar" al modo edición
-- [ ] Validar que la cédula sea numérica y tenga entre 6 y 10 dígitos
-- [ ] Implementar paginación en el listado de estudiantes
-- [ ] Agregar manejo de errores (`try/except`) al endpoint `GET /estudiantes`
-- [ ] Cerrar conexiones a la BD con `try/finally` para evitar conexiones abiertas
+- [ ] Mejorar validación de cédula (solo números, longitud razonable)
+- [ ] Agregar `try/except` al endpoint `GET /estudiantes`
+- [ ] Cerrar conexiones con `try/finally` o context managers
+- [ ] Agregar botón "Cancelar" en modo edición
+- [ ] Eliminar `console.log("VERSION NUEVA 12345")`
 
 ### 🟡 Calidad del código
 
-- [ ] Refactorizar `app.py` usando Blueprints de Flask (separar rutas, servicios y modelos)
-- [ ] Fijar versiones en `requirements.txt` (generar con `pip freeze`)
+- [ ] Fijar versiones en `requirements.txt` (`pip freeze > requirements.txt`)
 - [ ] Agregar `python-dotenv` a `requirements.txt`
-- [ ] Eliminar `print()` de debug en producción
+- [ ] Instalar `flask-jwt-extended`
+- [ ] Separar el proyecto en módulos:
 
-### 🟢 Portafolio y escalabilidad
+```
+app/
+├── routes/
+├── services/
+├── database/
+├── utils/
+templates/
+static/
+app.py
+```
 
-- [ ] Agregar `.env.example` como plantilla de configuración para nuevos desarrolladores
-- [ ] Escribir pruebas unitarias para las validaciones del backend
-- [ ] Agregar búsqueda y filtros en el frontend
+- [ ] Estandarizar respuestas JSON:
+
+```json
+{
+  "success": true,
+  "message": "Estudiante agregado correctamente",
+  "data": {}
+}
+```
+
+### 🟢 Portafolio
+
+- [ ] Agregar paginación: `SELECT * FROM estudiantes LIMIT 10 OFFSET 0;`
+- [ ] Crear colección de Postman
+- [ ] Agregar pruebas con `pytest`
+- [ ] Documentar la API
+
+### ⭐ Plus
+
+- [ ] Implementar JWT completo: registro, login, refresh token, logout y rutas protegidas
+- [ ] Agregar Swagger con Flask-RESTX o Flasgger (`/docs`)
+- [ ] Docker: `Dockerfile` y `docker-compose.yml`
+- [ ] Logging con módulo `logging`
+- [ ] GitHub Actions para pruebas automáticas
 
 ---
 
 ## 👤 Autor
 
-Desarrollado por **[Orion Serrano]** — Desarrollador Full Stack  
+Desarrollado por **[Orión Serrano]** — Desarrollador Full Stack  
 📍 Cali, Colombia  
-🔗 [LinkedIn](https://linkedin.com/in/tu-perfil) · [GitHub](https://github.com/tu-usuario)
+· [GitHub](https://github.com/orionserrano115)
