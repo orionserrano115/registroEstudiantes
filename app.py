@@ -82,6 +82,7 @@ def validar_estudiante(datos):
 
     if not datos.get('apellido', '').strip():
         return "El apellido es obligatorio"
+    
     if not datos.get('cedula', '').strip():
         return "La cédula es obligatoria"
 
@@ -90,6 +91,7 @@ def validar_estudiante(datos):
 
     if not datos.get('curso', '').strip():
         return "El curso es obligatorio"
+    
     try:
         edad = int(datos['edad'])
     except:
